@@ -1,0 +1,119 @@
+<mujoco model="ant">
+  <compiler inertiafromgeom="true" angle="degree" coordinate="local" />
+
+
+  <option timestep="0.02" integrator="RK4" />
+
+
+  <custom>
+    <numeric name="init_qpos" data="0.0 0.0 0.55 1.0 0.0 0.0 0.0 0.0 1.0 0.0 -1.0 0.0 -1.0 0.0 1.0" />
+  </custom>
+
+
+  <default>
+    <joint limited="true" armature="1" damping="1" />
+    <geom condim="3" conaffinity="0" margin="0.01" friction="1 0.5 0.5" solref=".02 1" solimp=".8 .8 .01" rgba="0.8 0.6 0.4 1" density="5.0" />
+  </default>
+
+
+  <asset>
+    <texture type="skybox" builtin="gradient" width="100" height="100" rgb1="1 1 1" rgb2="0 0 0" />
+    <texture name="texgeom" type="cube" builtin="flat" mark="cross" width="127" height="1278" rgb1="0.8 0.6 0.4" rgb2="0.8 0.6 0.4" markrgb="1 1 1" random="0.01" />
+    <texture name="texplane" type="2d" builtin="checker" rgb1="0 0 0" rgb2="0.8 0.8 0.8" width="100" height="100" />
+    <material name='MatPlane' texture="texplane" shininess="1" texrepeat="60 60" specular="1"  reflectance="0.5" />
+    <material name='geom' texture="texgeom" texuniform="true" />
+  </asset>
+
+
+  <!-- /-->
+  <!-- World and Body /-->
+  <worldbody>
+    <light directional="true" cutoff="100" exponent="1" diffuse="1 1 1" specular=".1 .1 .1" pos="0 0 1.3" dir="-0 0 -1.3" />
+
+    <!-- World: Plane /-->
+    <geom name='floor' material="MatPlane" pos='0 0 0' size='40 40 40' type='plane' conaffinity='1' rgba='0.8 0.9 0.8 1' condim='3' />
+
+    <!-- Body: Animal called "torso"/-->
+    <body name="torso" pos="0 0 1.3">
+
+      <!-- Middle part of the body /-->
+      <geom name="torso_body_geom" type="capsule" size="0.2" fromto=".0 -.25 .0 .0 .25 .0" pos=".0 .0 .0" /> <!-- Body /-->
+      <body name="torso_neck_geom" pos=".0 .3 .15">
+        <joint name="body_neck_joint" type="hinge" pos="0.0 0.0 0.0" axis="1 1 1" range="-15 15" />
+        <geom name="neck_geom" type="capsule" size=".07" fromto=".0 .0 .0 .0 .25 .35" /> <!-- Neck /-->
+        <body pos=".0 .25 .35">
+          <geom name="torso_head_direction" type="capsule" size="0.15" fromto=".0 .0 .0 .0 .1 .0" pos=".0 .0 .0" density="0.1"/> <!-- Head /-->
+        </body>
+      </body>
+      <body name="torso_tail_geom" pos=".0 -.4 -.1">
+        <joint name="body_tail_joint" type="hinge" pos="0.0 0.0 0.0" axis="1 1 0" range="-90 90" />
+        <geom name="tail_geom" type="capsule" size="0.03" fromto=".0 .0 .0 .0 -.15 -.3" pos=".0 .0 .0" /> <!-- Tail /-->
+      </body>
+
+      <!-- Unknown??? /-->
+      <!-- joint name="root" type="free" limited="false" pos="0 0 0" axis="0 0 1" margin="0.01" armature="0" damping="0" /-->
+      <!-- Unknown??? /-->
+
+      <body name="front_right_leg" pos=".0 .0 .0">
+        <geom name="aux_1_geom" type="capsule" size="0.06" fromto=".0 .0 .0 .14 .26 -.1" />
+        <body name="aux_1" pos=".14 .26 -.1">
+          <joint name="hip_1" type="hinge" pos=".0 .0 .0" axis="1 1 1" range="-90 90" />
+          <geom name="front_right_leg_geom" type="capsule" size="0.04" fromto=".0 .0 .0 .0 .0 -.2" />
+          <body pos=".0 .0 -.2">
+            <joint name="ankle_1" type="hinge" pos=".0 .0 .0" axis="1 1 0" range="-100 100" />
+            <geom name="front_right_ankle_geom" type="capsule" size="0.06" fromto=".0 .0 .0 .0 .0 -0.4" />
+          </body>
+        </body>
+      </body>
+
+      <body name="front_left_leg" pos=".0 .0 .0">
+        <geom name="aux_2_geom" type="capsule" size="0.06" fromto=".0 .0 .0 -.14 .26 -.1" />
+        <body name="aux_2" pos="-.14 .26 -.1">
+          <joint name="hip_2" type="hinge" pos=".0 .0 .0" axis="1 1 1" range="-90 90" />
+          <geom name="front_left_leg_geom" type="capsule" size="0.04" fromto=".0 .0 .0 .0 .0 -.2" />
+          <body pos=".0 .0 -.2">
+            <joint name="ankle_2" type="hinge" pos=".0 .0 .0" axis="1 1 0" range="-100 100" />
+            <geom name="front_left_ankle_geom" type="capsule" size="0.06" fromto=".0 .0 .0 .0 .0 -0.4" />
+          </body>
+        </body>
+      </body>
+
+      <body name="back_right_leg" pos=".0 .0 .0">
+        <geom name="aux_3_geom" type="capsule" size="0.06" fromto=".0 .0 .0 .14 -.26 -.1" />
+        <body name="aux_3" pos=".14 -.26 -.1">
+          <joint name="hip_3" type="hinge" pos=".0 .0 .0" axis="1 1 1" range="-90 90" />
+          <geom name="back_right_leg_geom" type="capsule" size="0.04" fromto=".0 .0 .0 .0 .0 -.2" />
+          <body pos=".0 .0 -.2">
+            <joint name="ankle_3" type="hinge" pos=".0 .0 .0" axis="1 1 0" range="-100 100" />
+            <geom name="back_right_ankle_geom" type="capsule" size="0.06" fromto=".0 .0 .0 .0 .0 -0.4" />
+          </body>
+        </body>
+      </body>
+
+      <body name="back_left_leg" pos=".0 .0 .0">
+        <geom name="aux_4_geom" type="capsule" size="0.06" fromto=".0 .0 .0 -.14 -.26 -.1" />
+        <body name="aux_4" pos="-.14 -.26 -.1">
+          <joint name="hip_4" type="hinge" pos=".0 .0 .0" axis="1 1 1" range="-90 90" />
+          <geom name="back_left_leg_geom" type="capsule" size="0.04" fromto=".0 .0 .0 .0 .0 -.2" />
+          <body pos=".0 .0 -.2">
+            <joint name="ankle_4" type="hinge" pos=".0 .0 .0" axis="1 1 0" range="-100 100" />
+            <geom name="back_left_ankle_geom" type="capsule" size="0.06" fromto=".0 .0 .0 .0 .0 -0.4" />
+          </body>
+        </body>
+      </body>
+
+    </body> <!-- of "torso"/-->
+  </worldbody>
+
+
+  <actuator>
+    <motor joint="hip_4"   ctrlrange="-150.0 150.0" ctrllimited="true" />
+    <motor joint="ankle_4" ctrlrange="-150.0 150.0" ctrllimited="true" />
+    <motor joint="hip_1"   ctrlrange="-150.0 150.0" ctrllimited="true" />
+    <motor joint="ankle_1" ctrlrange="-150.0 150.0" ctrllimited="true" />
+    <motor joint="hip_2"   ctrlrange="-150.0 150.0" ctrllimited="true" />
+    <motor joint="ankle_2" ctrlrange="-150.0 150.0" ctrllimited="true" />
+    <motor joint="hip_3"   ctrlrange="-150.0 150.0" ctrllimited="true" />
+    <motor joint="ankle_3" ctrlrange="-150.0 150.0" ctrllimited="true" />
+  </actuator>
+</mujoco>
