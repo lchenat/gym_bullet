@@ -14,6 +14,7 @@ class WalkerBaseBulletEnv(MJCFBaseBulletEnv):
 		self.camera_x = 0
 		self.walk_target_x = 1e3  # kilometer away
 		self.walk_target_y = 0
+		self.xy=[0.0, 0.0]
 
 	def create_single_player_scene(self):
 		self.stadium_scene = SinglePlayerStadiumScene(gravity=9.8, timestep=0.0165/4, frame_skip=4)
@@ -57,10 +58,14 @@ class WalkerBaseBulletEnv(MJCFBaseBulletEnv):
 			print("~INF~", state)
 			done = True
 
-		potential_old = self.potential
-		self.potential = self.robot.calc_potential()
+		# potential_old = self.potential
+		# self.potential = self.robot.calc_potential()
 		# progress = float(self.potential - potential_old)
-		progress = np.dot((np.cos(2*np.pi*self.robot.d), np.sin(2*np.pi*self.robot.d)), (self.robot.body_xyz[0], self.robot.body_xyz[1]))
+		xy_old = np.array(self.xy)
+		self.xy = np.array(self.robot.body_xyz[:2])
+		dx = self.xy - xy_old
+		progress = np.dot((np.cos(np.pi*(self.robot.d-0.25)), np.sin(np.pi*(self.robot.d-0.25))), dx)
+		# progress = np.dot((np.cos(2*np.pi*self.robot.d), np.sin(2*np.pi*self.robot.d)), (self.robot.body_xyz[0], self.robot.body_xyz[1]))
 
 		feet_collision_cost = 0.0
 		for i,f in enumerate(self.robot.feet): # TODO: Maybe calculating feet contacts could be done within the robot code

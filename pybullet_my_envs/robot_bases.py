@@ -86,11 +86,12 @@ class MJCFBasedRobot:
 	def reset(self, d=None):
 		if d is None:
 			# self.d = np.random.rand()
-			self.d = np.random.choice([0.0, 0.25, 0.5, 0.75])
+			# self.d = np.random.choice([0.0, 0.25, 0.5, 0.75])
+			self.d = np.random.choice([0.25, 0.75, -0.25, -0.75])
 		else:
 			self.d = d
-		self.target_x = 1e3 * np.cos(2*np.pi*self.d)
-		self.target_y = 1e3 * np.sin(2*np.pi*self.d)
+		self.target_x = 1e3 * np.cos(np.pi*(self.d-0.25))
+		self.target_y = 1e3 * np.sin(np.pi*(self.d-0.25))
 		self.ordered_joints = []
 
 		if self.self_collision:
