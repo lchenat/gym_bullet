@@ -52,7 +52,7 @@ class WalkerBaseBulletEnv(MJCFBaseBulletEnv):
 
 		state = self.robot.calc_state()  # also calculates self.joints_at_limit
 
-		alive = float(self.robot.alive_bonus(state[0]+self.robot.initial_z, self.robot.body_rpy[1]))   # state[0] is body height above ground, body_rpy[1] is pitch
+		alive = float(self.robot.alive_bonus(state[1]+self.robot.initial_z, self.robot.body_rpy[1]))   # state[0] is body height above ground, body_rpy[1] is pitch
 		done = alive < 0
 		if not np.isfinite(state).all():
 			print("~INF~", state)
