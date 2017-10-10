@@ -134,7 +134,7 @@ class Swimmer(WalkerBase):
 	foot_list = []
 
 	def __init__(self):
-		WalkerBase.__init__(self, "swimmer.xml", "torso", action_dim=2, obs_dim=17, power=2.0)	
+		WalkerBase.__init__(self, "swimmer.xml", "torso", action_dim=2, obs_dim=13, power=2.0)	
 
 	def alive_bonus(self, z, pitch):
 		return +1
