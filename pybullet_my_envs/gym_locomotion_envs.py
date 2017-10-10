@@ -2,7 +2,7 @@ from .scene_stadium import SinglePlayerStadiumScene
 from .env_bases import MJCFBaseBulletEnv
 import numpy as np
 import pybullet as p
-from robot_locomotors import Hopper, Walker2D, HalfCheetah, Ant, Ant6, Humanoid
+from robot_locomotors import Hopper, Walker2D, HalfCheetah, Ant, Ant6, Humanoid, Swimmer
 
 
 class WalkerBaseBulletEnv(MJCFBaseBulletEnv):
@@ -58,14 +58,14 @@ class WalkerBaseBulletEnv(MJCFBaseBulletEnv):
 			print("~INF~", state)
 			done = True
 
-		# potential_old = self.potential
-		# self.potential = self.robot.calc_potential()
-		# progress = float(self.potential - potential_old)
-		xy_old = np.array(self.xy)
-		self.xy = np.array(self.robot.body_xyz[:2])
-		dx = self.xy - xy_old
-		progress = np.dot((np.cos(np.pi*(self.robot.d-0.25)), np.sin(np.pi*(self.robot.d-0.25))), dx)
-		# progress = np.dot((np.cos(2*np.pi*self.robot.d), np.sin(2*np.pi*self.robot.d)), (self.robot.body_xyz[0], self.robot.body_xyz[1]))
+		potential_old = self.potential
+		self.potential = self.robot.calc_potential()
+		progress = float(self.potential - potential_old)
+		# xy_old = np.array(self.xy)
+		# self.xy = np.array(self.robot.body_xyz[:2])
+		# dx = self.xy - xy_old
+		# progress = 10*np.dot((np.cos(np.pi*(self.robot.d-0.25)), np.sin(np.pi*(self.robot.d-0.25))), dx)
+		progress = np.dot((np.cos(np.pi*(self.robot.d-0.25)), np.sin(np.pi*(self.robot.d-0.25))), (self.robot.body_xyz[0], self.robot.body_xyz[1]))
 
 		feet_collision_cost = 0.0
 		for i,f in enumerate(self.robot.feet): # TODO: Maybe calculating feet contacts could be done within the robot code
@@ -141,6 +141,11 @@ class AntBulletEnv(WalkerBaseBulletEnv):
 class Ant6BulletEnv(WalkerBaseBulletEnv):
 	def __init__(self, render=False, d=None):
 		self.robot = Ant6()
+		WalkerBaseBulletEnv.__init__(self, self.robot, render, d)
+
+class SwimmerBulletEnv(WalkerBaseBulletEnv):
+	def __init__(self, render=False, d=None):
+		self.robot = Swimmer()
 		WalkerBaseBulletEnv.__init__(self, self.robot, render, d)
 
 class HumanoidBulletEnv(WalkerBaseBulletEnv):
