@@ -7,12 +7,12 @@ import pybullet as p
 import numpy as np
 import copy
 import math
-import pybullet_data
+import hierarchical_envs.pb_data as pb_data
 
 
 class Kuka:
 
-  def __init__(self, urdfRootPath=pybullet_data.getDataPath(), timeStep=0.01):
+  def __init__(self, urdfRootPath=pb_data.getDataPath(), timeStep=0.01):
     self.urdfRootPath = urdfRootPath
     self.timeStep = timeStep
     
