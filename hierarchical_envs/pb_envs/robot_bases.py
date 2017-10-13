@@ -16,11 +16,12 @@ class MJCFBasedRobot:
 
     self_collision = True
 
-    def __init__(self, model_xml, robot_name, action_dim, obs_dim):
+    def __init__(self, model_xml, robot_name, action_dim, obs_dim, r_init):
         self.parts = None
         self.jdict = None
         self.ordered_joints = None
         self.robot_body = None
+        self.r_init = r_init
 
         high = np.ones([action_dim])
         self.action_space = gym.spaces.Box(-high, high)
@@ -118,6 +119,12 @@ class MJCFBasedRobot:
                 p.loadMJCF(
                     os.path.join(pb_data.getDataPath(), "mjcf",
                                  self.model_xml)))
+        
+        if self.r_init is None:
+            theta = np.random.uniform(2*np.pi)
+        else:
+            theta = self.r_init
+        self.robot_body.reset_orientation([0, 0, np.sin(theta/2), np.cos(theta/2)])
 
         self.robot_specific_reset()
 
@@ -191,7 +198,7 @@ class BodyPart:
 
     def reset_orientation(self, orientation):
         p.resetBasePositionAndOrientation(self.bodies[self.bodyIndex],
-                                          self.get_position(), orientation)
+                                          self.current_position(), orientation) # get -> current
 
     def reset_pose(self, position, orientation):
         p.resetBasePositionAndOrientation(self.bodies[self.bodyIndex],
