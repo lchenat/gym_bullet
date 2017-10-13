@@ -131,44 +131,44 @@ class WalkerBaseBulletEnv(MJCFBaseBulletEnv):
 
 
 class HopperBulletEnv(WalkerBaseBulletEnv):
-    def __init__(self, render=False, d=None):
-        self.robot = Hopper()
+    def __init__(self, render=False, d=None, r_init=None):
+        self.robot = Hopper(r_init)
         WalkerBaseBulletEnv.__init__(self, self.robot, render, d)
 
 
 class Walker2DBulletEnv(WalkerBaseBulletEnv):
-    def __init__(self, render=False, d=None):
-        self.robot = Walker2D()
+    def __init__(self, render=False, d=None, r_init=None):
+        self.robot = Walker2D(r_init)
         WalkerBaseBulletEnv.__init__(self, self.robot, render, d)
 
 
 class HalfCheetahBulletEnv(WalkerBaseBulletEnv):
-    def __init__(self, render=False, d=None):
-        self.robot = HalfCheetah()
+    def __init__(self, render=False, d=None, r_init=None):
+        self.robot = HalfCheetah(r_init)
         WalkerBaseBulletEnv.__init__(self, self.robot, render, d)
 
 
 class AntBulletEnv(WalkerBaseBulletEnv):
-    def __init__(self, render=False, d=None):
-        self.robot = Ant()
+    def __init__(self, render=False, d=None, r_init=None):
+        self.robot = Ant(r_init)
         WalkerBaseBulletEnv.__init__(self, self.robot, render, d)
 
 
 class InsectBulletEnv(WalkerBaseBulletEnv):
-    def __init__(self, render=False, d=None):
-        self.robot = Insect()
+    def __init__(self, render=False, d=None, r_init=None):
+        self.robot = Insect(r_init)
         WalkerBaseBulletEnv.__init__(self, self.robot, render, d)
 
 
 class SwimmerBulletEnv(WalkerBaseBulletEnv):
-    def __init__(self, render=False, d=None):
-        self.robot = Swimmer()
+    def __init__(self, render=False, d=None, r_init=None):
+        self.robot = Swimmer(r_init)
         WalkerBaseBulletEnv.__init__(self, self.robot, render, d)
 
 
 class HumanoidBulletEnv(WalkerBaseBulletEnv):
-    def __init__(self, render=False, d=None):
-        self.robot = Humanoid()
+    def __init__(self, render=False, d=None, r_init=None):
+        self.robot = Humanoid(r_init)
         WalkerBaseBulletEnv.__init__(self, self.robot, render)
         self.electricity_cost = 4.25 * WalkerBaseBulletEnv.electricity_cost
         self.stall_torque_cost = 4.25 * WalkerBaseBulletEnv.stall_torque_cost
