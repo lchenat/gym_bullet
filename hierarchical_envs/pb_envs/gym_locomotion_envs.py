@@ -21,9 +21,9 @@ class WalkerBaseBulletEnv(MJCFBaseBulletEnv):
             gravity=9.8, timestep=0.0165 / 4, frame_skip=4)
         return self.stadium_scene
 
-    def _reset(self):
+    def _reset(self, x=[0.0, 0.0, 0.0, 0.0]):
 
-        r = MJCFBaseBulletEnv._reset(self, self.d)
+        r = MJCFBaseBulletEnv._reset(self, self.d, x)
         p.configureDebugVisualizer(p.COV_ENABLE_RENDERING, 0)
 
         self.parts, self.jdict, self.ordered_joints, self.robot_body = self.robot.addToScene(

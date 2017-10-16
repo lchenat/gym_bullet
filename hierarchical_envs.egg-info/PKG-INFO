@@ -6,7 +6,6 @@ Home-page: http://github.com/lchenat
 Author: Liyu Chen
 Author-email: na
 License: License :: OSI Approved :: Apache Software License
-Description-Content-Type: UNKNOWN
 Description: Custmoized pybullet environment in gym format.
         
         You can import environmets from pybullet_my_envs/gym_locomotion_envs.py
