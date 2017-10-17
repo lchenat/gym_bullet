@@ -37,7 +37,7 @@ class MJCFBaseBulletEnv(gym.Env):
 		self.robot.np_random = self.np_random # use the same np_randomizer for robot as for env
 		return [seed]
 
-	def _reset(self, d):
+	def _reset(self, d, x):
 		if (self.physicsClientId<0):
 			self.physicsClientId = p.connect(p.SHARED_MEMORY)
 			if (self.physicsClientId<0):
@@ -58,7 +58,7 @@ class MJCFBaseBulletEnv(gym.Env):
 		self.done = 0
 		self.reward = 0
 		dump = 0
-		s = self.robot.reset(d)
+		s = self.robot.reset(d, x)
 		self.potential = self.robot.calc_potential()
 		return s
 

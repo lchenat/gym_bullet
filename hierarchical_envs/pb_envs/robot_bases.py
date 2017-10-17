@@ -8,11 +8,14 @@ parentdir = os.path.dirname(currentdir)
 os.sys.path.insert(0, parentdir)
 import hierarchical_envs.pb_data as pb_data
 
+def softmax(x):
+    x = np.exp(x - np.max(x))
+    return x / np.sum(x)
 
 class MJCFBasedRobot:
     """
-	Base class for mujoco .xml based agents.
-	"""
+    Base class for mujoco .xml based agents.
+    """
 
     self_collision = True
 
@@ -21,7 +24,7 @@ class MJCFBasedRobot:
         self.jdict = None
         self.ordered_joints = None
         self.robot_body = None
-        self.r_init = r_init
+        self.r_init = r_init        
 
         high = np.ones([action_dim])
         self.action_space = gym.spaces.Box(-high, high)
@@ -96,11 +99,11 @@ class MJCFBasedRobot:
 
         return parts, joints, ordered_joints, self.robot_body
 
-    def reset(self, d=None):
+    def reset(self, d=None, x=[0.0, 0.0, 0.0, 0.0]):
         if d is None:
             # self.d = np.random.rand()
             # self.d = np.random.choice([0.0, 0.25, 0.5, 0.75])
-            self.d = np.random.choice([0.25, 0.75, -0.25, -0.75])
+            self.d = np.random.choice([0.25, 0.75, -0.25, -0.75], p=softmax(x))
         else:
             self.d = d
         self.target_x = 1e3 * np.cos(np.pi * (self.d - 0.25))

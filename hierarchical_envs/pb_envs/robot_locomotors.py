@@ -85,8 +85,9 @@ class WalkerBase(MJCFBasedRobot):
                 p
             ],
             dtype=np.float32)
-        return np.clip(
-            np.concatenate([[self.d]] + [more] + [j] + [self.feet_contact]),
+        dd = np.pi*(self.d-0.25)
+        return np.clip(# sel.d only cannot capture the 2d circular structure
+            np.concatenate([[np.cos(dd), np.sin(dd)]] + [more] + [j] + [self.feet_contact]),
             -5, +5)
 
     def calc_potential(self):
@@ -110,7 +111,7 @@ class Hopper(WalkerBase):
 
     def __init__(self, r_init):
         WalkerBase.__init__(
-            self, "hopper.xml", "torso", action_dim=3, obs_dim=16, power=0.75, r_init=r_init)
+            self, "hopper.xml", "torso", action_dim=3, obs_dim=17, power=0.75, r_init=r_init)
 
     def alive_bonus(self, z, pitch):
         return +1 if z > 0.8 and abs(pitch) < 1.0 else -1
@@ -125,7 +126,7 @@ class Walker2D(WalkerBase):
             "walker2d.xml",
             "torso",
             action_dim=6,
-            obs_dim=23,
+            obs_dim=24,
             power=0.40,
             r_init=r_init)
 
@@ -148,7 +149,7 @@ class HalfCheetah(WalkerBase):
             "half_cheetah.xml",
             "torso",
             action_dim=6,
-            obs_dim=27,
+            obs_dim=28,
             power=0.90,
             r_init=r_init)
 
@@ -176,7 +177,7 @@ class Ant(WalkerBase):
 
     def __init__(self, r_init):
         WalkerBase.__init__(
-            self, "ant.xml", "torso", action_dim=8, obs_dim=29, power=2.5, r_init=r_init)
+            self, "ant.xml", "torso", action_dim=8, obs_dim=30, power=2.5, r_init=r_init)
 
     def alive_bonus(self, z, pitch):
         return +1 if z > 0.26 else -1  # 0.25 is central sphere rad, die if it scrapes the ground
@@ -187,7 +188,7 @@ class Swimmer(WalkerBase):
 
     def __init__(self, r_init):
         WalkerBase.__init__(
-            self, "swimmer.xml", "torso", action_dim=2, obs_dim=13, power=2.0, r_init=r_init)
+            self, "swimmer.xml", "torso", action_dim=2, obs_dim=14, power=2.0, r_init=r_init)
 
     def alive_bonus(self, z, pitch):
         return +1
@@ -198,7 +199,7 @@ class Insect(WalkerBase):
 
     def __init__(self, r_init):
         WalkerBase.__init__(
-            self, "insect.xml", "torso", action_dim=12, obs_dim=33, power=2.5, r_init=r_init)
+            self, "insect.xml", "torso", action_dim=12, obs_dim=34, power=2.5, r_init=r_init)
 
     def alive_bonus(self, z, pitch):
         return +1
@@ -214,7 +215,7 @@ class Humanoid(WalkerBase):
             'humanoid_symmetric.xml',
             'torso',
             action_dim=17,
-            obs_dim=45,
+            obs_dim=46,
             power=0.41,
             r_init=r_init)
         # 17 joints, 4 of them important for walking (hip, knee), others may as well be turned off, 17/4 = 4.25
