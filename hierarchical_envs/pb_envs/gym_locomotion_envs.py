@@ -21,7 +21,7 @@ class WalkerBaseBulletEnv(MJCFBaseBulletEnv):
             gravity=9.8, timestep=0.0165 / 4, frame_skip=4)
         return self.stadium_scene
 
-    def _reset(self, x=[0.0, 0.0, 0.0, 0.0]):
+    def _reset(self, x=[0.25, 0.25, 0.25, 0.25]):
 
         r = MJCFBaseBulletEnv._reset(self, self.d, x)
         p.configureDebugVisualizer(p.COV_ENABLE_RENDERING, 0)
@@ -131,44 +131,44 @@ class WalkerBaseBulletEnv(MJCFBaseBulletEnv):
 
 
 class HopperBulletEnv(WalkerBaseBulletEnv):
-    def __init__(self, render=False, d=None, r_init=None):
-        self.robot = Hopper(r_init)
+    def __init__(self, render=False, d=None, r_init=None, d_angle=False):
+        self.robot = Hopper(r_init, d_angle)
         WalkerBaseBulletEnv.__init__(self, self.robot, render, d)
 
 
 class Walker2DBulletEnv(WalkerBaseBulletEnv):
-    def __init__(self, render=False, d=None, r_init=None):
-        self.robot = Walker2D(r_init)
+    def __init__(self, render=False, d=None, r_init=None, d_angle=False):
+        self.robot = Walker2D(r_init, d_angle)
         WalkerBaseBulletEnv.__init__(self, self.robot, render, d)
 
 
 class HalfCheetahBulletEnv(WalkerBaseBulletEnv):
-    def __init__(self, render=False, d=None, r_init=None):
-        self.robot = HalfCheetah(r_init)
+    def __init__(self, render=False, d=None, r_init=None, d_angle=False):
+        self.robot = HalfCheetah(r_init, d_angle)
         WalkerBaseBulletEnv.__init__(self, self.robot, render, d)
 
 
 class AntBulletEnv(WalkerBaseBulletEnv):
-    def __init__(self, render=False, d=None, r_init=None):
-        self.robot = Ant(r_init)
+    def __init__(self, render=False, d=None, r_init=None, d_angle=False):
+        self.robot = Ant(r_init, d_angle)
         WalkerBaseBulletEnv.__init__(self, self.robot, render, d)
 
 
 class InsectBulletEnv(WalkerBaseBulletEnv):
-    def __init__(self, render=False, d=None, r_init=None):
-        self.robot = Insect(r_init)
+    def __init__(self, render=False, d=None, r_init=None, d_angle=False):
+        self.robot = Insect(r_init, d_angle)
         WalkerBaseBulletEnv.__init__(self, self.robot, render, d)
 
 
 class SwimmerBulletEnv(WalkerBaseBulletEnv):
-    def __init__(self, render=False, d=None, r_init=None):
-        self.robot = Swimmer(r_init)
+    def __init__(self, render=False, d=None, r_init=None, d_angle=False):
+        self.robot = Swimmer(r_init, d_angle)
         WalkerBaseBulletEnv.__init__(self, self.robot, render, d)
 
 
 class HumanoidBulletEnv(WalkerBaseBulletEnv):
-    def __init__(self, render=False, d=None, r_init=None):
-        self.robot = Humanoid(r_init)
+    def __init__(self, render=False, d=None, r_init=None, d_angle=False):
+        self.robot = Humanoid(r_init, d_angle)
         WalkerBaseBulletEnv.__init__(self, self.robot, render)
         self.electricity_cost = 4.25 * WalkerBaseBulletEnv.electricity_cost
         self.stall_torque_cost = 4.25 * WalkerBaseBulletEnv.stall_torque_cost

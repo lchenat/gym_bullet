@@ -8,10 +8,6 @@ parentdir = os.path.dirname(currentdir)
 os.sys.path.insert(0, parentdir)
 import hierarchical_envs.pb_data as pb_data
 
-def softmax(x):
-    x = np.exp(x - np.max(x))
-    return x / np.sum(x)
-
 class MJCFBasedRobot:
     """
     Base class for mujoco .xml based agents.
@@ -99,11 +95,12 @@ class MJCFBasedRobot:
 
         return parts, joints, ordered_joints, self.robot_body
 
-    def reset(self, d=None, x=[0.0, 0.0, 0.0, 0.0]):
+    def reset(self, d=None, x=[0.25, 0.25, 0.25, 0.25]):
         if d is None:
             # self.d = np.random.rand()
             # self.d = np.random.choice([0.0, 0.25, 0.5, 0.75])
-            self.d = np.random.choice([0.25, 0.75, -0.25, -0.75], p=softmax(x))
+            # print('debug:', x)
+            self.d = np.random.choice([0.25, 0.75, -0.25, -0.75], p=x)
         else:
             self.d = d
         self.target_x = 1e3 * np.cos(np.pi * (self.d - 0.25))

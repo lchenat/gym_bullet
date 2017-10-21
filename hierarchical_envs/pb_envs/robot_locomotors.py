@@ -5,13 +5,14 @@ north_x = 0
 north_y = 1e3
 
 class WalkerBase(MJCFBasedRobot):
-    def __init__(self, fn, robot_name, action_dim, obs_dim, power, r_init):
+    def __init__(self, fn, robot_name, action_dim, obs_dim, power, r_init, d_angle):
         MJCFBasedRobot.__init__(self, fn, robot_name, action_dim, obs_dim, r_init)
         self.power = power
         self.camera_x = 0
         self.walk_target_x = 1e3  # kilometer away
         self.walk_target_y = 0
         self.body_xyz = [0, 0, 0]
+        self.d_angle = d_angle
 
     def robot_specific_reset(self):
         for j in self.ordered_joints:
@@ -85,6 +86,8 @@ class WalkerBase(MJCFBasedRobot):
                 p
             ],
             dtype=np.float32)
+        if self.d_angle:
+            more = np.append(more, [np.cos(angle_to_target), np.sin(angle_to_target)])
         dd = np.pi*(self.d-0.25)
         return np.clip(# sel.d only cannot capture the 2d circular structure
             np.concatenate([[np.cos(dd), np.sin(dd)]] + [more] + [j] + [self.feet_contact]),
@@ -109,9 +112,10 @@ class WalkerBase(MJCFBasedRobot):
 class Hopper(WalkerBase):
     foot_list = ["foot"]
 
-    def __init__(self, r_init):
+    def __init__(self, r_init, d_angle):
+        obs_dim = 19 if d_angle else 17 
         WalkerBase.__init__(
-            self, "hopper.xml", "torso", action_dim=3, obs_dim=17, power=0.75, r_init=r_init)
+            self, "hopper.xml", "torso", action_dim=3, obs_dim=obs_dim, power=0.75, r_init=r_init, d_angle=d_angle)
 
     def alive_bonus(self, z, pitch):
         return +1 if z > 0.8 and abs(pitch) < 1.0 else -1
@@ -120,15 +124,17 @@ class Hopper(WalkerBase):
 class Walker2D(WalkerBase):
     foot_list = ["foot", "foot_left"]
 
-    def __init__(self, r_init):
+    def __init__(self, r_init, d_angle):
+        obs_dim = 26 if d_angle else 24
         WalkerBase.__init__(
             self,
             "walker2d.xml",
             "torso",
             action_dim=6,
-            obs_dim=24,
+            obs_dim=obs_dim,
             power=0.40,
-            r_init=r_init)
+            r_init=r_init,
+            d_angle=d_angle)
 
     def alive_bonus(self, z, pitch):
         return +1 if z > 0.8 and abs(pitch) < 1.0 else -1
@@ -143,15 +149,17 @@ class HalfCheetah(WalkerBase):
     foot_list = ["ffoot", "fshin", "fthigh", "bfoot", "bshin",
                  "bthigh"]  # track these contacts with ground
 
-    def __init__(self, r_init):
+    def __init__(self, r_init, d_angle):
+        obs_dim = 30 if d_angle else 28
         WalkerBase.__init__(
             self,
             "half_cheetah.xml",
             "torso",
             action_dim=6,
-            obs_dim=28,
+            obs_dim=obs_dim,
             power=0.90,
-            r_init=r_init)
+            r_init=r_init,
+            d_angle=d_angle)
 
     def alive_bonus(self, z, pitch):
         # Use contact other than feet to terminate episode: due to a lot of strange walks using knees
@@ -175,9 +183,10 @@ class Ant(WalkerBase):
         'right_back_foot'
     ]
 
-    def __init__(self, r_init):
+    def __init__(self, r_init, d_angle):
+        obs_dim = 32 if d_angle else 30
         WalkerBase.__init__(
-            self, "ant.xml", "torso", action_dim=8, obs_dim=30, power=2.5, r_init=r_init)
+            self, "ant.xml", "torso", action_dim=8, obs_dim=obs_dim, power=2.5, r_init=r_init, d_angle=d_angle)
 
     def alive_bonus(self, z, pitch):
         return +1 if z > 0.26 else -1  # 0.25 is central sphere rad, die if it scrapes the ground
@@ -186,9 +195,10 @@ class Ant(WalkerBase):
 class Swimmer(WalkerBase):
     foot_list = []
 
-    def __init__(self, r_init):
+    def __init__(self, r_init, d_angle):
+        obs_dim = 16 if d_angle else 14
         WalkerBase.__init__(
-            self, "swimmer.xml", "torso", action_dim=2, obs_dim=14, power=2.0, r_init=r_init)
+            self, "swimmer.xml", "torso", action_dim=2, obs_dim=obs_dim, power=2.0, r_init=r_init, d_angle=d_angle)
 
     def alive_bonus(self, z, pitch):
         return +1
@@ -197,9 +207,10 @@ class Swimmer(WalkerBase):
 class Insect(WalkerBase):
     foot_list = []
 
-    def __init__(self, r_init):
+    def __init__(self, r_init, d_angle):
+        obs_dim = 36 if d_angle else 34
         WalkerBase.__init__(
-            self, "insect.xml", "torso", action_dim=12, obs_dim=34, power=2.5, r_init=r_init)
+            self, "insect.xml", "torso", action_dim=12, obs_dim=obs_dim, power=2.5, r_init=r_init, d_angle=d_angle)
 
     def alive_bonus(self, z, pitch):
         return +1
@@ -209,15 +220,17 @@ class Humanoid(WalkerBase):
     self_collision = True
     foot_list = ["right_foot", "left_foot"]  # "left_hand", "right_hand"
 
-    def __init__(self, r_init):
+    def __init__(self, r_init, d_angle):
+        obs_dim = 48 if d_angle else 46
         WalkerBase.__init__(
             self,
             'humanoid_symmetric.xml',
             'torso',
             action_dim=17,
-            obs_dim=46,
+            obs_dim=obs_dim,
             power=0.41,
-            r_init=r_init)
+            r_init=r_init,
+            d_angle=d_angle)
         # 17 joints, 4 of them important for walking (hip, knee), others may as well be turned off, 17/4 = 4.25
 
     def robot_specific_reset(self):
