@@ -10,10 +10,10 @@ from numpy.linalg import norm
 
 class StochasticDiscreteOrientation(gym.Env):
 
-    def __init__(self, size_noise=0.1, map_size=50.0, goal_radius=0.05):
+    def __init__(self, size_noise=0.05, map_size=50.0, goal_radius=0.05):
         super(StochasticDiscreteOrientation, self).__init__()
         self.metadata = {
-            'render.modes':  ['human', 'rgb']
+            'render.modes':  ['human', 'rgb_array']
         }
         self.size_noise = size_noise
         self.map_size = map_size
@@ -24,9 +24,7 @@ class StochasticDiscreteOrientation(gym.Env):
             np.array([0, -1]),  # down
         ]
         self.goal_radius = map_size * goal_radius
-        self.position = np.zeros((2))
-        self.goal_position = np.random.rand(2) * self.map_size
-        np.clip(self.goal_position, -map_size, map_size, self.goal_position)
+        self._reset()
         self.action_space = gym.spaces.Discrete(4)
         self.observation_space = gym.spaces.Box(low=-map_size,
                                                 high=map_size,
@@ -44,11 +42,14 @@ class StochasticDiscreteOrientation(gym.Env):
         reward = (norm(self.goal_position) - dist_to_goal)
         reward /= norm(self.goal_position)
         done = dist_to_goal <= self.goal_radius
-        return self._state, reward, done, None
+        info = {'true_reward': None}
+        return self._state, reward, done, info
 
     def _reset(self):
         self.position = np.zeros((2))
         self.goal_position = np.random.rand(2) * self.map_size
+        np.clip(self.goal_position, -self.map_size, self.map_size, self.goal_position)
+        return self._state
 
     def _render(self, mode='human', close=False):
         if close:
@@ -62,7 +63,7 @@ class StochasticDiscreteOrientation(gym.Env):
         map_view[gp_x - r:gp_x + r, gp_y - r:gp_y + r, 1:] = 0
         p_x, p_y = self.position.astype('int') + int(self.map_size)
         map_view[p_x - r:p_x + r, p_y - r:p_y + r, :] = 0
-        if mode == 'rgb':
+        if mode == 'rgb_array':
             return map_view
         if mode == 'human':
             img = Image.fromarray(map_view, 'RGB')
