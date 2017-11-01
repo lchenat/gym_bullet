@@ -43,6 +43,7 @@ class StochasticDiscreteOrientation(gym.Env):
         reward /= norm(self.goal_position)
         done = dist_to_goal <= self.goal_radius
         info = {'true_reward': None}
+        reward *= reward * reward
         return self._state, reward, done, info
 
     def _reset(self):
