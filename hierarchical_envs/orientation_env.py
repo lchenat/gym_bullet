@@ -29,6 +29,7 @@ class StochasticDiscreteOrientation(gym.Env):
         self.observation_space = gym.spaces.Box(low=-map_size,
                                                 high=map_size,
                                                 shape=(4, ))
+        self.prev_action = None
 
     @property
     def _state(self):
@@ -41,14 +42,19 @@ class StochasticDiscreteOrientation(gym.Env):
         dist_to_goal = norm(self.goal_position - self.position)
         reward = (norm(self.goal_position) - dist_to_goal)
         reward /= norm(self.goal_position)
+        reward *= abs(reward)**2
+        if not self.prev_action == action:
+            reward *= 0.1
+        self.prev_action = action
         done = dist_to_goal <= self.goal_radius
+        if done:
+            reward *= 5.0
         info = {'true_reward': None}
-        reward *= reward * reward
         return self._state, reward, done, info
 
     def _reset(self):
         self.position = np.zeros((2))
-        self.goal_position = np.random.rand(2) * self.map_size
+        self.goal_position = np.random.randn(2) * self.map_size * 0.9
         np.clip(self.goal_position, -self.map_size, self.map_size, self.goal_position)
         return self._state
 
