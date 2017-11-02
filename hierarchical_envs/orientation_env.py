@@ -8,6 +8,13 @@ from PIL import Image
 from numpy.linalg import norm
 
 
+def manhattan(x):
+    return sum(x)
+
+
+norm = manhattan
+
+
 class StochasticDiscreteOrientation(gym.Env):
 
     def __init__(self, size_noise=0.05, map_size=50.0, goal_radius=0.05):
@@ -41,7 +48,7 @@ class StochasticDiscreteOrientation(gym.Env):
         np.clip(self.position, -self.map_size, self.map_size, self.position)
         dist_to_goal = norm(self.goal_position - self.position)
         reward = (norm(self.goal_position) - dist_to_goal)
-        reward /= norm(self.goal_position)
+        reward /= norm(self.goal_position) + 1e-6
         reward *= abs(reward)**2
         if not self.prev_action == action:
             reward *= 0.1
