@@ -9,7 +9,7 @@ Inputs: current position and goal position.
 
 Output: which direction to take a step of size N(1, 0.1).
 
-* Link: [Here](./hl_0.1noise.mp4)
+* Link: [YouTube](https://www.youtube.com/watch?v=XhRksn-8U9U&feature=youtu.be)
 
 
 ## Low Level Training
