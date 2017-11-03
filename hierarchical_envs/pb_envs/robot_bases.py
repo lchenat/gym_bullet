@@ -95,12 +95,18 @@ class MJCFBasedRobot:
 
         return parts, joints, ordered_joints, self.robot_body
 
+    def potition_goal(self, x, y):
+        position = [x, y, 1]
+        orientation = p.getQuaternionFromEuler([0, 1.6, 0])
+        ball = p.loadMJCF(os.path.join(pb_data.getDataPath(), "mjcf", "red_ball.xml"))
+
     def reset(self, d=None, x=[0.25, 0.25, 0.25, 0.25]):
         if d is None:
             # self.d = np.random.rand()
             # self.d = np.random.choice([0.0, 0.25, 0.5, 0.75])
             # print('debug:', x)
-            self.d = np.random.choice([0.25, 0.75, -0.25, -0.75], p=x)
+            # self.d = np.random.choice([0.25, 0.75, -0.25, -0.75], p=x)
+            self.d = np.random.choice([0.25, -0.25, 0.75, -0.75], p=x)
         else:
             self.d = d
         self.target_x = 1e3 * np.cos(np.pi * (self.d - 0.25))
@@ -120,6 +126,7 @@ class MJCFBasedRobot:
                     os.path.join(pb_data.getDataPath(), "mjcf",
                                  self.model_xml)))
         
+        self.position_goal(-5,5)
         if self.r_init is None:
             theta = np.random.uniform(2*np.pi)
         else:
