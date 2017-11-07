@@ -29,5 +29,6 @@ Inputs: proprioceptive body-state, current position, and goal position.
 
 Output: low-level controls.
 
-* Link: [YouTube](https://www.youtube.com/watch?v=Wm4fSYXCdJ4&feature=youtu.be)
+* Link: [YouTube](https://youtu.be/zRtS3_d6y4o)
+* Link2: [YouTube](https://www.youtube.com/watch?v=Iqrb1miOIXg&feature=youtu.be)
 
